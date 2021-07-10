@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src=" https://unpkg.com/@reactivex/rxjs@version/dist/global/Rx.js"></script>
+</head>
+<body>
+    <div>一个新的rxjs使用</div>
+    <button id="btn">注册事件</button>
+    <button id="rxBtn">rx注册事件</button>
+</body>
+<script>
+  
+   
+   // 注册事件监听
+   let btnDom = document.getElementById("btn");
+   btnDom.addEventListener('click',()=>{console.log("按钮注册一个点击事件")})
+
+    // Observable可观察对象：表示一个可调用的未来值或者事件的集合。
+    // 使用RxJs创建一个可观察对象
+  let rxBtnDom = document.getElementById("rxBtn");
+  Rx.Observable.fromEvent(rxBtnDom,"click").subscribe(()=>console.log("rx按钮注册一个点击事件"))
+</script>
+</html>
