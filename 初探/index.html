@@ -1,27 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src=" https://unpkg.com/@reactivex/rxjs@version/dist/global/Rx.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
 </head>
+
 <body>
-    <div>一个新的rxjs使用</div>
-    <button id="btn">注册事件</button>
-    <button id="rxBtn">rx注册事件</button>
+  <div>一个新的rxjs使用</div>
+  <button id="btn">注册事件</button>
+  <button id="rxBtn">rx注册事件</button>
+  <button id="setThing">建立一个可观察事件</button>
+  <button id="cancol">取消订阅</button>
 </body>
+<script src="https://cdn.bootcdn.net/ajax/libs/rxjs/7.1.0/rxjs.umd.js"></script>
 <script>
-  
-   
-   // 注册事件监听
-   let btnDom = document.getElementById("btn");
-   btnDom.addEventListener('click',()=>{console.log("按钮注册一个点击事件")})
+  window.onload = () => {
+    // 注册事件监听
+    let btnDom = document.getElementById("btn");
+    btnDom.addEventListener('click', () => {
+      console.log("按钮注册一个点击事件")
+    })
+
+
+    // Observable可观察对象：可观察对象是数据流的源头，可以来自事件，网络，也可以自定义数据流。
+    // Observer观察者：通过订阅可观察对象，即可获得观察者，观察者拦截处理数据流，可以视为数据流的终点
+    // Operator操作符：操作符主要用于数据流的转换操作
+    // Subject主题：集Observable和Observer的特点于一身，还可以用于广播事件流
+    // Sheduler调度者：控制事件流的并发
 
     // Observable可观察对象：表示一个可调用的未来值或者事件的集合。
     // 使用RxJs创建一个可观察对象
-  let rxBtnDom = document.getElementById("rxBtn");
-  Rx.Observable.fromEvent(rxBtnDom,"click").subscribe(()=>console.log("rx按钮注册一个点击事件"))
+    const {
+      Observable,
+      fromEvent
+    } = rxjs;
+    let rxBtnDom = document.getElementById("rxBtn");
+    fromEvent(rxBtnDom, "click").subscribe(() => console.log("rx按钮注册一个点击事件"))
+
+    // 新增一个列子
+    // 建立一个可观察
+    const setThingDom = document.getElementById("setThing");
+    // 建立一个Observable 可观察物件
+    let click$ = fromEvent(setThingDom, 'click');
+    // 建议Observer
+    let observer = {
+      next: () => console.log("建立一个可观察对象并循环监听")
+    };
+    // 建立订阅 （订阅Observable,传入Observer观察者物件）
+    let subs$ = click$.subscribe(observer);
+   
+     // 取消订阅按钮  setThingDom订阅会关闭将不会再点击打印console.log；
+    const cancolDom = document.getElementById("cancol");
+    fromEvent(cancolDom,"click").subscribe(()=>subs$.unsubscribe())
+
+
+
+  }
 </script>
+
 </html>
