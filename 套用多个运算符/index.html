@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <button id="sub">创建订阅</button>
+    <button id="subCancot">取消订阅</button>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/rxjs/7.1.0/rxjs.umd.js"></script>
+<script>
+    window.onload = () => {
+        const {
+            fromEvent,
+        } = rxjs;
+
+        const {
+            filter,
+            take
+        } = rxjs.operators; // 获取运算符
+
+        // 建立observable
+        let subDom = document.getElementById("sub");
+        let subClick$ = fromEvent(subDom, "click");
+        // 当获取的随机数小于9 或者 已经触发了两次后 则不会执行订阅
+        // https://cn.rx.js.org/class/es6/operator/groupBy.js~GroupedObservable.html
+        // filter 通过只发送源 Observable 的中满足指定 predicate 函数的项来进行过滤
+        // take 只发出源 Observable 最初发出的的N个值 (N = count)
+        subClick$ = subClick$.pipe(
+            filter(x => {
+                let num = Math.ceil(Math.random() * 10);
+                console.log(`当前${num}`);
+                return num < 9
+            }), take(2)
+        )
+
+        let subscribeThing = subClick$.subscribe((x) => {
+            console.log("小于9.会取消订阅，则不会打印")
+        })
+
+        // 取消订阅
+        let subCancotDom = document.getElementById("subCancot");
+        fromEvent(subCancotDom, 'click').subscribe(() => subscribeThing.unsubscribe());
+
+    }
+</script>
+
+</html>
