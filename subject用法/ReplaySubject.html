@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四种Subject的用法</title>
+
+</head>
+
+<body>
+    <button id="sub">创建订阅</button>
+    <button id="subCancel">获取广播值</button>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/rxjs/7.1.0/rxjs.umd.js"></script>
+<script>
+    window.onload = () => {
+
+        const {
+            fromEvent,
+            ReplaySubject
+        } = rxjs;
+
+        class ReplaySubjectClass {
+
+            // 类似于 BehaviorSubject，可以发送旧值给新的订阅者，但是不仅是‘当前值’，还可以是之前的旧值。
+            static replaySubject = new ReplaySubject();
+
+            static sendAsyncSubject() {
+                ReplaySubjectClass.replaySubject.next(1);
+                ReplaySubjectClass.replaySubject.next(2);
+                ReplaySubjectClass.replaySubject.next(3);
+                ReplaySubjectClass.replaySubject.complete();
+            }
+            static getAsyncSubject() {
+                return ReplaySubjectClass.replaySubject.asObservable();
+            }
+        }
+
+
+
+        let subDom = document.getElementById("sub");
+        let subCancelDom = document.getElementById("subCancel");
+
+        let clicks$ = fromEvent(subDom, 'click').subscribe((x) => {
+            console.log('触发了1')
+            ReplaySubjectClass.sendAsyncSubject();
+        })
+
+        fromEvent(subCancelDom, 'click').subscribe((x) => {
+            console.log('触发了2')
+            setTimeout(() => {
+                ReplaySubjectClass.getAsyncSubject().subscribe((val) => {
+                    console.log(val) // 三次打印  1  2  3
+                });
+            }, 2000)
+
+        })
+
+
+
+
+    }
+</script>
+
+</html>
