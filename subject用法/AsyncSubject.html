@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四种Subject的用法</title>
+
+</head>
+
+<body>
+    <button id="sub">创建订阅</button>
+    <button id="subCancel">获取广播值</button>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/rxjs/7.1.0/rxjs.umd.js"></script>
+<script>
+    window.onload = () => {
+
+        const {
+            fromEvent,
+            AsyncSubject
+        } = rxjs;
+
+
+
+        let subDom = document.getElementById("sub");
+        let subCancelDom = document.getElementById("subCancel");
+        // 只有当 Observable 执行完成时(执行 complete())，它才会将执行的最后一个值发送给观察者。
+        let asyncSubject = new AsyncSubject();
+        currentAsyncSubject = asyncSubject.asObservable();
+        asyncSubject.next(2);
+
+        let clicks$ = fromEvent(subDom, 'click').subscribe((x) => {
+            console.log('触发了1')
+            asyncSubject.next(3);
+            asyncSubject.next(4);
+            asyncSubject.next(5);
+            asyncSubject.next(6);
+            asyncSubject.complete();
+        })
+
+        fromEvent(subCancelDom, 'click').subscribe((x) => {
+            console.log('触发了2')
+            setTimeout(() => {
+                asyncSubject.asObservable().subscribe((val) => {
+                    console.log(val) // 3
+                });
+            }, 2000)
+
+        })
+
+
+
+
+    }
+</script>
+
+</html>
