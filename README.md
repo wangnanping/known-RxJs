@@ -34,7 +34,7 @@
 
     // 建立Observer
     let observer = {
-      next: () => console.log("建立一个可观察对象并循环监听")
+      next: () => console.log("建立一个可观察对象")
     };
 
     // 建立订阅 （订阅Observable,传入Observer观察者物件）

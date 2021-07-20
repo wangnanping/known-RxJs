@@ -11,7 +11,7 @@
 
 <body>
     <button id="sub">创建订阅</button>
-    <button id="subCancot">取消订阅</button>
+    <button id="subCancel">取消订阅</button>
 </body>
 <script src="https://cdn.bootcdn.net/ajax/libs/rxjs/7.1.0/rxjs.umd.js"></script>
 <script>
@@ -45,8 +45,8 @@
         })
 
         // 取消订阅
-        let subCancotDom = document.getElementById("subCancot");
-        fromEvent(subCancotDom, 'click').subscribe(() => subscribeThing.unsubscribe());
+        let subCancelDom = document.getElementById("subCancel");
+        fromEvent(subCancelDom, 'click').subscribe(() => subscribeThing.unsubscribe());
 
     }
 </script>

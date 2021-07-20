@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四种Subject的用法</title>
+
+</head>
+
+<body>
+    <button id="sub">创建订阅</button>
+    <button id="subCancel">获取广播值</button>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/rxjs/7.1.0/rxjs.umd.js"></script>
+<script>
+    window.onload = () => {
+
+        const {
+            fromEvent,
+            Subject,
+            BehaviorSubject
+        } = rxjs;
+
+        const {
+            filter,
+            take
+        } = rxjs.operators; // 获取运算符
+
+
+        // 有一个“当前值”的概念。它保存了发送给消费者的最新值，当有新的观察者订阅时，会立即从 BehaviorSubject 那接收到“当前值”，在定义一个 BehaviorSubject 时需要有初始值
+
+        let subDom = document.getElementById("sub");
+        let subCancelDom = document.getElementById("subCancel");
+
+        let behaviorSubject = new BehaviorSubject();
+        currentBehaviorSubject = behaviorSubject.asObservable();
+        behaviorSubject.next(2);
+
+        let clicks$ = fromEvent(subDom, 'click').subscribe((x) => {
+            console.log('触发了1')
+            behaviorSubject.next(3);
+
+            // behaviorSubject.asObservable().subscribe((val) => {
+            //     console.log(val)
+            // });
+        })
+
+        fromEvent(subCancelDom, 'click').subscribe((x) => {
+            console.log('触发了2')
+            setTimeout(() => {
+                behaviorSubject.asObservable().subscribe((val) => {
+                    console.log(val) // 3
+                });
+            }, 2000)
+
+        })
+
+
+
+
+    }
+</script>
+
+</html>

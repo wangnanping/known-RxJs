@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四种Subject的用法</title>
+
+</head>
+
+<body>
+    <button id="sub">创建订阅</button>
+    <button id="subCancel">取消订阅</button>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/rxjs/7.1.0/rxjs.umd.js"></script>
+<script>
+    window.onload = () => {
+        const {
+            fromEvent,
+            Subject,
+            BehaviorSubject
+        } = rxjs;
+
+        const {
+            filter,
+            take
+        } = rxjs.operators; // 获取运算符
+
+
+        // 创建主体物件进行广播
+        let subJect = new Subject();
+        // 建立观察环境 objservable
+        let subDom = document.getElementById("sub");
+        let clicks$ = fromEvent(subDom, 'click');
+        // 通过Operators 运算符tack 限制最多两个事件
+        clicks$ = clicks$.pipe(take(2))
+        // 将广播事件全部交给subJect
+        // clicks$.subscribe(subJect)
+        // 由subject 建立Observer 观察者处理事件
+        let sub1$ = clicks$.subscribe((x) => {
+            console.log('触发了1')
+        })
+        let sub2$ = clicks$.subscribe((x) => {
+            console.log('触发了2')
+        })
+
+        // 设置取消订阅
+        let subCancelDom = document.getElementById("subCancel");
+        
+        fromEvent(subCancelDom,'click').subscribe(()=>{
+            sub1$.unsubscribe();
+            sub2$.unsubscribe();
+        })
+        
+    }
+</script>
+
+</html>
