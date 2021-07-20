@@ -22,28 +22,36 @@
             AsyncSubject
         } = rxjs;
 
+        class AsyncSubjectClass {
+
+            // 只有当 Observable 执行完成时(执行 complete())，它才会将执行的最后一个值发送给观察者。
+            static asyncSubject = new AsyncSubject();
+
+            static sendAsyncSubject() {
+                AsyncSubjectClass.asyncSubject.next(1);
+                AsyncSubjectClass.asyncSubject.next(2);
+                AsyncSubjectClass.asyncSubject.next(3);
+                AsyncSubjectClass.asyncSubject.complete();
+            }
+            static getAsyncSubject() {
+                return AsyncSubjectClass.asyncSubject.asObservable();
+            }
+        }
+
 
 
         let subDom = document.getElementById("sub");
         let subCancelDom = document.getElementById("subCancel");
-        // 只有当 Observable 执行完成时(执行 complete())，它才会将执行的最后一个值发送给观察者。
-        let asyncSubject = new AsyncSubject();
-        currentAsyncSubject = asyncSubject.asObservable();
-        asyncSubject.next(2);
 
         let clicks$ = fromEvent(subDom, 'click').subscribe((x) => {
             console.log('触发了1')
-            asyncSubject.next(3);
-            asyncSubject.next(4);
-            asyncSubject.next(5);
-            asyncSubject.next(6);
-            asyncSubject.complete();
+            AsyncSubjectClass.sendAsyncSubject();
         })
 
         fromEvent(subCancelDom, 'click').subscribe((x) => {
             console.log('触发了2')
             setTimeout(() => {
-                asyncSubject.asObservable().subscribe((val) => {
+                AsyncSubjectClass.getAsyncSubject().subscribe((val) => {
                     console.log(val) // 3
                 });
             }, 2000)

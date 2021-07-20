@@ -28,19 +28,29 @@
             take
         } = rxjs.operators; // 获取运算符
 
+        class BehaviorSubjectClass {
 
-        // 有一个“当前值”的概念。它保存了发送给消费者的最新值，当有新的观察者订阅时，会立即从 BehaviorSubject 那接收到“当前值”，在定义一个 BehaviorSubject 时需要有初始值
 
+            // 有一个“当前值”的概念。它保存了发送给消费者的最新值，当有新的观察者订阅时，会立即从 BehaviorSubject 那接收到“当前值”，在定义一个 BehaviorSubject 时需要有初始值
+            static BehaviorSubject = new BehaviorSubject();
+
+            static sendBehaviorSubject() {
+                BehaviorSubjectClass.BehaviorSubject.next(1);
+            }
+            static getBehaviorSubject() {
+                return BehaviorSubjectClass.BehaviorSubject.asObservable();
+            }
+        }
+        // 
+        BehaviorSubjectClass.sendBehaviorSubject();
         let subDom = document.getElementById("sub");
         let subCancelDom = document.getElementById("subCancel");
 
-        let behaviorSubject = new BehaviorSubject();
-        currentBehaviorSubject = behaviorSubject.asObservable();
-        behaviorSubject.next(2);
+
 
         let clicks$ = fromEvent(subDom, 'click').subscribe((x) => {
             console.log('触发了1')
-            behaviorSubject.next(3);
+            BehaviorSubjectClass.sendBehaviorSubject();
 
             // behaviorSubject.asObservable().subscribe((val) => {
             //     console.log(val)
@@ -50,7 +60,7 @@
         fromEvent(subCancelDom, 'click').subscribe((x) => {
             console.log('触发了2')
             setTimeout(() => {
-                behaviorSubject.asObservable().subscribe((val) => {
+                BehaviorSubjectClass.getBehaviorSubject().subscribe((val) => {
                     console.log(val) // 3
                 });
             }, 2000)
