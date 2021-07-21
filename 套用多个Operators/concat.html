@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <button id="sub">创建订阅</button>
+    <button id="subCancel">取消订阅</button>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/rxjs/7.1.0/rxjs.umd.js"></script>
+<script>
+    window.onload = () => {
+        // interval 创建一个 Observable ，该 Observable 使用指定的 IScheduler ，并以指定时间间隔发出连续的数字。
+       const {interval} = rxjs;
+       const {take,concat,toArray} = rxjs.operators;
+       const one = interval(1000).pipe(take(10));
+       const two = interval(1000).pipe(take(10));
+       const three = interval(1000).pipe(take(10));
+       const rules = one.pipe(concat(two ,three),toArray());
+       rules.subscribe(x=>console.log(x));
+
+    }
+</script>
+
+</html>

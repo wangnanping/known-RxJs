@@ -44,4 +44,6 @@
     const cancolDom = document.getElementById("cancol");
     fromEvent(cancolDom,"click").subscribe(()=>subs$.unsubscribe())
  ```
+ #### 四种 Subject 的用法和区别
+  文件夹subject用法有实例
 
