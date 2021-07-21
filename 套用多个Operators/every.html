@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <button id="sub">创建订阅</button>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/rxjs/7.1.0/rxjs.umd.js"></script>
+<script>
+    window.onload = () => {
+        // form从一个数组、类数组对象、Promise、迭代器对象或者类 Observable 对象创建一个 Observable.
+        const {
+            from
+        } = rxjs;
+        const {
+            every
+        } = rxjs.operators;
+        //   every  功能类似于lodash的every
+        // 返回的 Observable 发出是否源 Observable 的每项都满足指定的条件。
+
+        const users = [{
+                'user': 'barney',
+                'age': 36,
+                'active': false
+            },
+            {
+                'user': 'fred',
+                'age': 40,
+                'active': false
+            }
+        ];
+        from(users).pipe(
+                every(item => !item.active)
+            )
+            .subscribe(x => console.log(x));
+
+    }
+</script>
+
+</html>
